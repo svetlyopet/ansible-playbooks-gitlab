@@ -1,0 +1,70 @@
+---
+
+- name: Initialize local task vars
+  ansible.builtin.set_fact:
+    gitlab_projects_list: []
+    _page: 1
+    _page_size: 100 # use the limit for page sizes: https://docs.gitlab.com/api/rest/#offset-based-pagination
+
+- name: Get GitLab projects list
+  block:
+    - name: Get first page of GitLab projects list
+      ansible.builtin.uri:
+        url: "{{ gitlab_projects_url }}?per_page={{ _page_size }}&page={{ _page }}"
+        method: GET
+        headers:
+          PRIVATE-TOKEN: "{{ gitlab_api_token }}"
+        return_content: yes
+        status_code: 200
+        timeout: 3
+      register: _gitlab_response
+      retries: 3
+      delay: 5
+      no_log: true
+      until: _gitlab_response.status == 200
+
+    - name: Update Gitlab projects list
+      ansible.builtin.set_fact:
+        gitlab_projects_list: "{{ gitlab_projects_list + _gitlab_response.json | default([]) }}"
+
+    - name: Determine if more pages are available to query
+      ansible.builtin.set_fact:
+        _total_pages: "{{ _gitlab_response.x_total_pages }}"
+
+    - name: Get next pages for GitLab projects
+      ansible.builtin.uri:
+        url: "{{ gitlab_projects_url }}?per_page={{ _page_size }}&page={{ item }}"
+        method: GET
+        headers:
+          PRIVATE-TOKEN: "{{ gitlab_api_token }}"
+        return_content: yes
+        status_code: 200
+        timeout: 3
+      register: _gitlab_response
+      retries: 3
+      delay: 5
+      no_log: true
+      with_sequence: start={{ _page | int }} end={{ _total_pages | int }}
+      when: >-
+        _total_pages is defined and
+        _total_pages | int > 1
+
+    - name: Reset Gitlab projects list
+      ansible.builtin.set_fact:
+        gitlab_projects_list: []
+      when: >-
+        _total_pages is defined and
+        _total_pages | int > 1
+
+    - name: Update Gitlab projects with the paginated results
+      ansible.builtin.set_fact:
+        gitlab_projects_list: "{{ gitlab_projects_list + [item.json] }}"
+      no_log: true
+      loop: "{{ _gitlab_response.results }}"
+      when: >-
+        _total_pages is defined and
+        _total_pages | int > 1
+
+- name: Output gitlab projects list
+  ansible.builtin.debug:
+    var: gitlab_projects_list

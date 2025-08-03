@@ -1,0 +1,15 @@
+---
+- name: Manage Gitlab projects
+  hosts: localhost
+  gather_facts: no
+  pre_tasks:
+      - name: Global variable not defined
+        ansible.builtin.fail:
+            msg: "variable {{ item }} not defined"
+        when: item is not defined
+        with_items:
+            - "gitlab_url"
+            - "gitlab_token"
+            - "action"
+  roles:
+      - role: gitlabproject_manage
