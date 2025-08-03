@@ -1,0 +1,33 @@
+---
+
+- name: Assert task variables are defined
+  ansible.builtin.assert:
+      that:
+      - project_name is defined
+
+- name: Assert variables are defined for project create
+  ansible.builtin.assert:
+      that:
+      - merge_method is defined
+      - merge_method in ["merge", "rebase_merge", "ff"]
+      - visibility is defined
+      - visibility in ["private", "internal", "public"]
+  when: action == "project_create"
+
+- name: Create Gitlab project
+  ansible.builtin.uri:
+    url: "{{ gitlab_projects_url }}"
+    method: POST
+    headers:
+      PRIVATE-TOKEN: "{{ gitlab_api_token }}"
+    body: "{{ lookup('ansible.builtin.template','project_create_req.json.j2') }}"
+    body_format: json
+    return_content: yes
+    status_code: 201
+    timeout: 3
+  register: _gitlab_response
+  retries: 3
+  delay: 5
+  no_log: true
+  until: _gitlab_response.status == 201
+  when: action == "project_create"

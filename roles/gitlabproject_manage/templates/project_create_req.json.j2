@@ -1,0 +1,11 @@
+{
+    "name": "{{ project_name }}",
+{% if project_template is defined %}
+    "template_name": "{{ project_template }}",
+{% endif %}
+{% if project_import is defined %}
+    "import_url": "{{ project_import }}",
+{% endif %}
+    "merge_method": "{{ merge_method }}",
+    "visibility": "{{ visibility }}"
+}

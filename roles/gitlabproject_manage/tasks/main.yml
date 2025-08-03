@@ -1,4 +1,7 @@
 ---
 
 - ansible.builtin.include_tasks: gitlabprjlist_get.yml
-  when: action == "projects_list"
+  when: action in ["projects_list"]
+
+- ansible.builtin.include_tasks: gitlabprj_cud.yml
+  when: action in ["project_create", "project_update", "project_delete"]

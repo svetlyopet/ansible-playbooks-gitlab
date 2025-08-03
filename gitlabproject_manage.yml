@@ -3,13 +3,11 @@
   hosts: localhost
   gather_facts: no
   pre_tasks:
-      - name: Global variable not defined
-        ansible.builtin.fail:
-            msg: "variable {{ item }} not defined"
-        when: item is not defined
-        with_items:
-            - "gitlab_url"
-            - "gitlab_token"
-            - "action"
+      - name: Assert global variables are defined
+        ansible.builtin.assert:
+          that:
+            - gitlab_url is defined
+            - gitlab_api_token is defined
+            - action is defined
   roles:
       - role: gitlabproject_manage
