@@ -20,7 +20,7 @@
     method: POST
     headers:
       PRIVATE-TOKEN: "{{ gitlab_api_token }}"
-    body: "{{ lookup('ansible.builtin.template','project_create_req.json.j2') }}"
+    body: "{{ lookup('ansible.builtin.template','prj_cu_req.json.j2') }}"
     body_format: json
     return_content: yes
     status_code: 201
@@ -29,13 +29,52 @@
   retries: 3
   delay: 5
   until: _gitlab_response.status == 201
-  when: action == "project_create"
+  when: 
+    - action == "project_create"
+
+
+- ansible.builtin.include_tasks: gitlabprjlist_get.yml
+  when: action in ["project_update", "project_delete"]
+
+- name: Lookup existing Gitlab project
+  ansible.builtin.set_fact:
+    projects_found_by_name: "{{ gitlab_projects_list | selectattr('name', 'equalto', project_name) | list }}"
+  when: action in ["project_update", "project_delete"]
+
+- name: Fail if zero or more than one project found
+  ansible.builtin.fail:
+    msg: "More than one project found with name {{ project_name }}"
+  when: 
+    - action in ["project_update", "project_delete"]
+    - projects_found_by_name | length == 0
+    - projects_found_by_name | length > 1
+
+- name: Extract project id
+  ansible.builtin.set_fact:
+    project_id: "{{ projects_found_by_name[0].id }}"
+  when: 
+    - action in ["project_update", "project_delete"]
+
+- name: Update Gitlab project
+  ansible.builtin.uri:
+    url: "{{ gitlab_projects_url }}/{{ project_id }}"
+    method: PUT
+    headers:
+      PRIVATE-TOKEN: "{{ gitlab_api_token }}"
+    body: "{{ lookup('ansible.builtin.template','prj_cu_req.json.j2') }}"
+    body_format: json
+    return_content: yes
+    status_code: 200
+    timeout: 3
+  register: _gitlab_response
+  retries: 3
+  delay: 5
+  until: _gitlab_response.status == 200
+  when: action == "project_update"
 
 - name: Delete Gitlab project
-  vars:
-    project_name_urlencoded: "{{ project_name | replace('/', '%2F') }}"
   ansible.builtin.uri:
-    url: "{{ gitlab_projects_url }}/{{ project_name_urlencoded }}"
+    url: "{{ gitlab_projects_url }}/{{ project_id }}"
     method: DELETE
     headers:
       PRIVATE-TOKEN: "{{ gitlab_api_token }}"

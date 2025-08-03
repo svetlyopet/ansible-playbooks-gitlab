@@ -8,7 +8,7 @@
 
 - name: Get GitLab projects list
   block:
-    - name: Get first page of GitLab projects list
+    - name: Get GitLab projects list
       ansible.builtin.uri:
         url: "{{ gitlab_projects_url }}?per_page={{ _page_size }}&page={{ _page }}"
         method: GET
@@ -68,3 +68,4 @@
 - name: Output gitlab projects list
   ansible.builtin.debug:
     var: gitlab_projects_list
+  when: action == "projects_list"
