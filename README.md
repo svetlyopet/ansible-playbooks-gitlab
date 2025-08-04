@@ -6,19 +6,20 @@ Ansible playbooks for managing resources in Gitlab.
 
 Copy the example global vars file and populate it with your credentials.
 ```shell
-cp global.vars.yml.example global.vars.yml
+cp global.yml.example vars/global.yml
 ```
 
 ## Usage
 
 For running a set of tasks you always need to pass on the `action` extra variable
-to select the workflow for your intended changes as well as the variables in the `global.vars.yml` which contain the URL and credentials of your Gitlab instance.
+to select the workflow for your intended changes as well as the variables in the 
+`vars/global.yml` file which contain the URL and credentials of your Gitlab instance.
 
 ### List projects
 
 Example:
  ```shell
- ansible-playbook gitlabproject_manage.yml -e @global.vars.yml -e "action=projects_list"
+ ansible-playbook gitlabproject_manage.yml -e @vars/global.yml -e "action=projects_list"
  ```
 
  ### Create a project
@@ -35,7 +36,7 @@ Example:
 Example:
  ```shell
 ansible-playbook gitlabproject_manage.yml \
--e @global.vars.yml \
+-e @vars/global.yml \
 -e "project_name=foo" \
 -e "visibility=private" \
 -e "merge_method=ff" \
@@ -57,7 +58,7 @@ ansible-playbook gitlabproject_manage.yml \
 Example:
  ```shell
 ansible-playbook gitlabproject_manage.yml \
--e @global.vars.yml \
+-e @vars/global.yml \
 -e "project_name=foo" \
 -e "visibility=private" \
 -e "merge_method=ff" \
@@ -74,7 +75,7 @@ ansible-playbook gitlabproject_manage.yml \
 Example:
  ```shell
 ansible-playbook gitlabproject_manage.yml \
--e @global.vars.yml \
+-e @vars/global.yml \
 -e "project_name=foo" \
 -e "action=project_delete"
  ```
