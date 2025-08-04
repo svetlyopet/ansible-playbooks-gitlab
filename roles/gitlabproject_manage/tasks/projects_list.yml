@@ -65,7 +65,9 @@
         _total_pages is defined and
         _total_pages | int > 1
 
-- name: Output gitlab projects list
-  ansible.builtin.debug:
-    var: gitlab_projects_list
+- name: Output gitlab projects list file to locahost working directory
+  copy:
+    content: "{{ gitlab_projects_list | to_nice_json }}"
+    dest: "{{ output_directory_localhost }}/gitlab_projects.json"
+  delegate_to: localhost
   when: action == "projects_list"
