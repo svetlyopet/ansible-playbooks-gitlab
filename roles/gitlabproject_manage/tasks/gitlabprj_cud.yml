@@ -29,6 +29,7 @@
   retries: 3
   delay: 5
   until: _gitlab_response.status == 201
+  changed_when: _gitlab_response.status == 201
   when: 
     - action == "project_create"
 
@@ -69,6 +70,7 @@
   retries: 3
   delay: 5
   until: _gitlab_response.status == 200
+  changed_when: _gitlab_response.status == 200
   when: action == "project_update"
 
 - name: Delete Gitlab project
@@ -83,4 +85,5 @@
   retries: 3
   delay: 5
   until: _gitlab_response.status == 202
+  changed_when: _gitlab_response.status == 202
   when: action == "project_delete"
