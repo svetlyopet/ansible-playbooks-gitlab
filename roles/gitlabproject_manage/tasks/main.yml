@@ -1,14 +1,8 @@
 ---
 
-- ansible.builtin.include_tasks: projects_list.yml
-  when: action in ["projects_list"]
+- name: Assert action is supported
+  ansible.builtin.assert:
+      that:
+      - action in ["projects_list", "project_create", "project_update", "project_delete"]
 
-- ansible.builtin.include_tasks: project_create.yml
-  when: action in ["project_create"]
-
-- ansible.builtin.include_tasks: project_update.yml
-  when: action in ["project_update"]
-
-- ansible.builtin.include_tasks: project_delete.yml
-  when: action in ["project_delete"]
-
+- ansible.builtin.include_tasks: "{{ action }}.yml"
