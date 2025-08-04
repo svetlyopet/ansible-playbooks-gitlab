@@ -3,6 +3,6 @@
 - name: Assert action is supported
   ansible.builtin.assert:
       that:
-      - action in ["projects_list", "project_create", "project_update", "project_delete"]
+          - action in ["projects_list", "project_create", "project_update", "project_delete"]
 
 - ansible.builtin.include_tasks: "{{ action }}.yml"

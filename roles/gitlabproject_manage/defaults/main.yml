@@ -1,3 +1,5 @@
+---
+
 gitlab_api_version: "v4"
 
 gitlab_projects_url: "{{ gitlab_url }}/api/{{ gitlab_api_version }}/projects"

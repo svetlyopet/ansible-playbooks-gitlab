@@ -3,35 +3,35 @@
 - name: Assert task variables are defined
   ansible.builtin.assert:
       that:
-      - project_name is defined
+          - project_name is defined
 
 - ansible.builtin.include_tasks: projects_list.yml
 
 - name: Lookup existing Gitlab project
   ansible.builtin.set_fact:
-    projects_found_by_name: "{{ gitlab_projects_list | selectattr('name', 'equalto', project_name) | list }}"
+      projects_found_by_name: "{{ gitlab_projects_list | selectattr('name', 'equalto', project_name) | list }}"
 
 - name: Fail if zero or more than one project found
   ansible.builtin.fail:
-    msg: "{{ projects_found_by_name | length }} projects found with name {{ project_name }}"
-  when: 
-    - projects_found_by_name | length != 1
+      msg: "{{ projects_found_by_name | length }} projects found with name {{ project_name }}"
+  when:
+      - projects_found_by_name | length != 1
 
 - name: Extract project id
   ansible.builtin.set_fact:
-    project_id: "{{ projects_found_by_name[0].id }}"
+      project_id: "{{ projects_found_by_name[0].id }}"
 
 - name: Update Gitlab project
   ansible.builtin.uri:
-    url: "{{ gitlab_projects_url }}/{{ project_id }}"
-    method: PUT
-    headers:
-      PRIVATE-TOKEN: "{{ gitlab_api_token }}"
-    body: "{{ lookup('ansible.builtin.template','project_create_update_request.json.j2') }}"
-    body_format: json
-    return_content: yes
-    status_code: 200
-    timeout: 3
+      url: "{{ gitlab_projects_url }}/{{ project_id }}"
+      method: PUT
+      headers:
+          PRIVATE-TOKEN: "{{ gitlab_api_token }}"
+      body: "{{ lookup('ansible.builtin.template','project_create_update_request.json.j2') }}"
+      body_format: json
+      return_content: true
+      status_code: 200
+      timeout: 3
   register: _gitlab_response
   retries: 3
   delay: 5

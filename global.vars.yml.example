@@ -1,2 +1,3 @@
+---
 gitlab_url: "URL to your Gitlab instance"
 gitlab_api_token: "PAT with read_api and api scopes"

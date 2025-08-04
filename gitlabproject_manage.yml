@@ -1,13 +1,13 @@
 ---
 - name: Manage Gitlab projects
   hosts: localhost
-  gather_facts: no
+  gather_facts: false
   pre_tasks:
       - name: Assert global variables are defined
         ansible.builtin.assert:
-          that:
-            - gitlab_url is defined
-            - gitlab_api_token is defined
-            - action is defined
+            that:
+                - gitlab_url is defined
+                - gitlab_api_token is defined
+                - action is defined
   roles:
       - role: gitlabproject_manage

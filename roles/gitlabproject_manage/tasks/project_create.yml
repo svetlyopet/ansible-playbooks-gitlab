@@ -3,24 +3,24 @@
 - name: Assert task variables are defined
   ansible.builtin.assert:
       that:
-      - project_name is defined
-      - project_name != ""
-      - merge_method is defined
-      - merge_method in ["merge", "rebase_merge", "ff"]
-      - visibility is defined
-      - visibility in ["private", "internal", "public"]
+          - project_name is defined
+          - project_name != ""
+          - merge_method is defined
+          - merge_method in ["merge", "rebase_merge", "ff"]
+          - visibility is defined
+          - visibility in ["private", "internal", "public"]
 
 - name: Create Gitlab project
   ansible.builtin.uri:
-    url: "{{ gitlab_projects_url }}"
-    method: POST
-    headers:
-      PRIVATE-TOKEN: "{{ gitlab_api_token }}"
-    body: "{{ lookup('ansible.builtin.template','project_create_update_request.json.j2') }}"
-    body_format: json
-    return_content: yes
-    status_code: 201
-    timeout: 3
+      url: "{{ gitlab_projects_url }}"
+      method: POST
+      headers:
+          PRIVATE-TOKEN: "{{ gitlab_api_token }}"
+      body: "{{ lookup('ansible.builtin.template','project_create_update_request.json.j2') }}"
+      body_format: json
+      return_content: true
+      status_code: 201
+      timeout: 3
   register: _gitlab_response
   retries: 3
   delay: 5
