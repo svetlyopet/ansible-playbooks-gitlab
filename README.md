@@ -12,7 +12,7 @@ cp global.vars.yml.example global.vars.yml
 ## Usage
 
 For running a set of tasks you always need to pass on the `action` extra variable
-to select the workflow for your intended changes.
+to select the workflow for your intended changes as well as the variables in the `global.vars.yml` which contain the URL and credentials of your Gitlab instance.
 
 ### List projects
 

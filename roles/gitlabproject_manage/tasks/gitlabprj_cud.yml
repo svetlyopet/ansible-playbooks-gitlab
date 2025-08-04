@@ -43,11 +43,10 @@
 
 - name: Fail if zero or more than one project found
   ansible.builtin.fail:
-    msg: "More than one project found with name {{ project_name }}"
+    msg: "{{ projects_found_by_name | length }} projects found with name {{ project_name }}"
   when: 
     - action in ["project_update", "project_delete"]
-    - projects_found_by_name | length == 0
-    - projects_found_by_name | length > 1
+    - projects_found_by_name | length != 1
 
 - name: Extract project id
   ansible.builtin.set_fact:
