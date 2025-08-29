@@ -10,4 +10,4 @@
                 - gitlab_api_token is defined
                 - action is defined
   roles:
-      - role: gitlabproject_manage
+      - role: gitlab_project

@@ -19,7 +19,7 @@ to select the workflow for your intended changes as well as the variables in the
 
 Example:
  ```shell
- ansible-playbook gitlabproject_manage.yml -e @vars/global.yml -e "action=projects_list"
+ ansible-playbook gitlab_project.yml -e @vars/global.yml -e "action=projects_list"
  ```
 
  ### Create a project
@@ -35,7 +35,7 @@ Example:
 
 Example:
  ```shell
-ansible-playbook gitlabproject_manage.yml \
+ansible-playbook gitlab_project.yml \
 -e @vars/global.yml \
 -e "project_name=foo" \
 -e "visibility=private" \
@@ -57,7 +57,7 @@ ansible-playbook gitlabproject_manage.yml \
 
 Example:
  ```shell
-ansible-playbook gitlabproject_manage.yml \
+ansible-playbook gitlab_project.yml \
 -e @vars/global.yml \
 -e "project_name=foo" \
 -e "visibility=private" \
@@ -74,7 +74,7 @@ ansible-playbook gitlabproject_manage.yml \
 
 Example:
  ```shell
-ansible-playbook gitlabproject_manage.yml \
+ansible-playbook gitlab_project.yml \
 -e @vars/global.yml \
 -e "project_name=foo" \
 -e "action=project_delete"

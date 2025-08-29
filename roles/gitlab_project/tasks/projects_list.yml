@@ -63,7 +63,7 @@
       _total_pages is defined and
       _total_pages | int > 1
 
-- name: Output gitlab projects list file to locahost working directory
+- name: Output gitlab projects list file to localhost working directory
   copy:
       content: "{{ gitlab_projects_list | to_nice_json }}"
       dest: "{{ output_directory_localhost }}/gitlab_projects_list.json"
