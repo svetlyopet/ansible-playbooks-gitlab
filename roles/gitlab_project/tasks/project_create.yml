@@ -1,6 +1,6 @@
 ---
 
-- name: Assert task variables are defined
+- name: project_create | Assert task variables are defined
   ansible.builtin.assert:
       that:
           - project_name is defined
@@ -10,7 +10,7 @@
           - visibility is defined
           - visibility in ["private", "internal", "public"]
 
-- name: Create Gitlab project
+- name: project_create | Create Gitlab project
   ansible.builtin.uri:
       url: "{{ gitlab_projects_url }}"
       method: POST

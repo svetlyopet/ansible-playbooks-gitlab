@@ -1,12 +1,12 @@
 ---
 
-- name: Initialize local task vars
+- name: projects_list | Initialize local task vars
   ansible.builtin.set_fact:
       gitlab_projects_list: []
       _page: 1
       _page_size: 100  # use the limit for page sizes: https://docs.gitlab.com/api/rest/#offset-based-pagination
 
-- name: Get GitLab projects list
+- name: projects_list | Get GitLab projects list
   ansible.builtin.uri:
       url: "{{ gitlab_projects_url }}?per_page={{ _page_size }}&page={{ _page }}"
       method: GET
@@ -21,15 +21,15 @@
   no_log: true
   until: _gitlab_response.status == 200
 
-- name: Populate Gitlab projects list variable
+- name: projects_list | Populate Gitlab projects list variable
   ansible.builtin.set_fact:
       gitlab_projects_list: "{{ gitlab_projects_list + _gitlab_response.json | default([]) }}"
 
-- name: Determine if more pages are available to query
+- name: projects_list | Determine if more pages are available to query
   ansible.builtin.set_fact:
       _total_pages: "{{ _gitlab_response.x_total_pages }}"
 
-- name: Get next pages for GitLab projects
+- name: projects_list | Get next pages for GitLab projects
   ansible.builtin.uri:
       url: "{{ gitlab_projects_url }}?per_page={{ _page_size }}&page={{ item }}"
       method: GET
@@ -47,14 +47,14 @@
       _total_pages is defined and
       _total_pages | int > 1
 
-- name: Reset Gitlab projects list variable
+- name: projects_list | Reset Gitlab projects list variable
   ansible.builtin.set_fact:
       gitlab_projects_list: []
   when: >-
       _total_pages is defined and
       _total_pages | int > 1
 
-- name: Populate Gitlab projects with the paginated results
+- name: projects_list | Populate Gitlab projects with the paginated results
   ansible.builtin.set_fact:
       gitlab_projects_list: "{{ gitlab_projects_list + [item.json] }}"
   no_log: true
@@ -63,7 +63,7 @@
       _total_pages is defined and
       _total_pages | int > 1
 
-- name: Output gitlab projects list file to localhost working directory
+- name: projects_list | Output gitlab projects list file to localhost working directory
   ansible.builtin.copy:
       content: "{{ gitlab_projects_list | to_nice_json }}"
       dest: "{{ output_directory_localhost }}/gitlab_projects_list.json"

@@ -1,28 +1,28 @@
 ---
 
-- name: Assert task variables are defined
+- name: project_update | Assert task variables are defined
   ansible.builtin.assert:
       that:
           - project_name is defined
 
-- name: Include projects list tasks
+- name: project_update | Include projects list tasks
   ansible.builtin.include_tasks: projects_list.yml
 
-- name: Lookup existing Gitlab project
+- name: project_update | Lookup existing Gitlab project
   ansible.builtin.set_fact:
       projects_found_by_name: "{{ gitlab_projects_list | selectattr('name', 'equalto', project_name) | list }}"
 
-- name: Fail if zero or more than one project found
+- name: project_update | Fail if zero or more than one project found
   ansible.builtin.fail:
       msg: "{{ projects_found_by_name | length }} projects found with name {{ project_name }}"
   when:
       - projects_found_by_name | length != 1
 
-- name: Extract project id
+- name: project_update | Extract project id
   ansible.builtin.set_fact:
       project_id: "{{ projects_found_by_name[0].id }}"
 
-- name: Update Gitlab project
+- name: project_update | Update Gitlab project
   ansible.builtin.uri:
       url: "{{ gitlab_projects_url }}/{{ project_id }}"
       method: PUT

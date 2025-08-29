@@ -1,6 +1,13 @@
 ---
 exclude_paths:
   - .ansible-lint
-  
+
 skip_list:
   - var-naming
+
+enable_list:
+  - args
+  - empty-string-compare
+  - no-log-password
+  - no-same-owner
+  - name[prefix]
