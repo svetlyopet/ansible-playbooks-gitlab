@@ -5,7 +5,8 @@
       that:
           - project_name is defined
 
-- ansible.builtin.include_tasks: projects_list.yml
+- name: Include projects list tasks
+  ansible.builtin.include_tasks: projects_list.yml
 
 - name: Lookup existing Gitlab project
   ansible.builtin.set_fact:

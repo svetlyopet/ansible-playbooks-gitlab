@@ -64,8 +64,9 @@
       _total_pages | int > 1
 
 - name: Output gitlab projects list file to localhost working directory
-  copy:
+  ansible.builtin.copy:
       content: "{{ gitlab_projects_list | to_nice_json }}"
       dest: "{{ output_directory_localhost }}/gitlab_projects_list.json"
+      mode: '0644'
   delegate_to: localhost
   when: action == "projects_list"

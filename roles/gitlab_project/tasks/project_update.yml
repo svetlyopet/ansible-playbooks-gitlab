@@ -5,7 +5,8 @@
       that:
           - project_name is defined
 
-- ansible.builtin.include_tasks: projects_list.yml
+- name: Include projects list tasks
+  ansible.builtin.include_tasks: projects_list.yml
 
 - name: Lookup existing Gitlab project
   ansible.builtin.set_fact:
@@ -27,7 +28,7 @@
       method: PUT
       headers:
           PRIVATE-TOKEN: "{{ gitlab_api_token }}"
-      body: "{{ lookup('ansible.builtin.template','project_create_update_request.json.j2') }}"
+      body: "{{ lookup('ansible.builtin.template', 'project_create_update_request.json.j2') }}"
       body_format: json
       return_content: true
       status_code: 200

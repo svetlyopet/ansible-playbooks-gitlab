@@ -16,7 +16,7 @@
       method: POST
       headers:
           PRIVATE-TOKEN: "{{ gitlab_api_token }}"
-      body: "{{ lookup('ansible.builtin.template','project_create_update_request.json.j2') }}"
+      body: "{{ lookup('ansible.builtin.template', 'project_create_update_request.json.j2') }}"
       body_format: json
       return_content: true
       status_code: 201

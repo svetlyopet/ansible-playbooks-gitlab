@@ -5,4 +5,5 @@
       that:
           - action in ["projects_list", "project_create", "project_update", "project_delete"]
 
-- ansible.builtin.include_tasks: "{{ action }}.yml"
+- name: "Include tasks for action {{ action }}"
+  ansible.builtin.include_tasks: "{{ action }}.yml"

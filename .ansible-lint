@@ -1,0 +1,6 @@
+---
+exclude_paths:
+  - .ansible-lint
+  
+skip_list:
+  - var-naming
